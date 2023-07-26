@@ -1,0 +1,1 @@
+Rails.application.config.assets.precompile += %w( gatepass/application.css gatepass/application.js )
