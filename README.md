@@ -2,7 +2,17 @@
 Short description and motivation.
 
 ## Usage
-How to use my plugin.
+See the Installation section below.
+
+For setting up a DEV environment, clone the directory within a rails project and add to the Gemfile:
+```
+gem 'gatepass', path: 'gatepass'
+```
+OR
+```
+gem 'gatepass', git: 'https://github.com/pockettheories/gatepass'
+```
+See [Bundle Git Guide](https://bundler.io/guides/git.html) for more
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -21,6 +31,12 @@ Or install it yourself as:
 $ gem install gatepass
 ```
 
+Mount the engine with the following line in `config/routes.rb` :
+```
+mount Gatepass::Engine => '/gatepass'
+```
+Ensure you also have the root configured (Eg. `root 'home#index''`) for your Rails application.
+
 Modify the application controller to include the Gatepass module and add the authentication check:
 ```
 class ApplicationController < ActionController::Base
@@ -29,7 +45,19 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-TODO - Configuration parameters
+In `config/application.rb` , define the following configuration parameters:
+```
+config.ldap_server_hostname = 'myldap.com'
+config.ldap_server_port = 636
+config.ldap_ca_cert = '/etc/path/ca.cert'
+config.ldap_base = 'DN=myldap,DN=com'
+```
+
+Run the migrations with:
+```
+rails gatepass:install:migrations
+rails db:migrate
+```
 
 Create an initial user account with:
 ```
@@ -52,7 +80,7 @@ auth_type is `local` or `activedirectory`.
 Use a dummy password for activedirectory users.
 
 ## Contributing
-Contribution directions go here.
+Create a pull request on GitHub.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

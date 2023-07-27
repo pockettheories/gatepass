@@ -1,13 +1,17 @@
 module Gatepass
+  # Provides the login/logout functionality
   class AuthenticationController < ApplicationController
+    # Display the login form
     def login
     end
 
+    # Remove the user from the session and redirect to the login form
     def logout
       session.delete :user
       redirect_to  :action => :login
     end
 
+    # Process the POST from the login form
     def authenticate
       username = params[:username]
       password = params[:password]
@@ -25,7 +29,7 @@ module Gatepass
       elsif user.auth_type == 'activedirectory' # 'ldap'
         require 'net/ldap'
 
-        server_address = Rails.application.config.ldap_server_hostname  # 'ad.nitinkatkam.mdbrecruit.net'
+        server_address = Rails.application.config.ldap_server_hostname
         server_port = Rails.application.config.ldap_server_port
         ca_certificate = Rails.application.config.ldap_ca_cert
 
@@ -34,7 +38,7 @@ module Gatepass
                              :encryption => {
                                method: :simple_tls,
                                tls_options: {
-                                 ca_file: ca_certificate  # '/Users/nitin.katkam/Downloads/nitinkatkam-ad-ca.cer',
+                                 ca_file: ca_certificate
                                  # verify_mode: OpenSSL::SSL::VERIFY_NONE
                                }
                              },
@@ -45,18 +49,16 @@ module Gatepass
                              }
 
         filter = Net::LDAP::Filter.eq("distinguishedname", user.username_mapping)
-        treebase = Rails.application.config.ldap_base  # "dc=nitinkatkam, dc=mdbrecruit, dc=net"
+        treebase = Rails.application.config.ldap_base
 
         search_result_count = 0
         ldap.search(:base => treebase, :filter => filter) do |entry|
           search_result_count += 1
-          # puts "DN: #{entry.dn}" # CN=bindUser1,CN=Users,DC=nitinkatkam,DC=mdbrecruit,DC=net
-          # puts "memberOf: #{entry.memberof}" #["CN=peopleOfNitinKatkam,CN=Users,DC=nitinkatkam,DC=mdbrecruit,DC=net", "CN=Administrators,CN=Builtin,DC=nitinkatkam,DC=mdbrecruit,DC=net"]
 
           if ldap.get_operation_result.code == 49 or search_result_count == 0
             redirect_to({ controller: 'gatepass/authentication', action: 'login' })
           elsif search_result_count == 1
-            session[:user] = user # entry  # user_obj
+            session[:user] = user # entry
             redirect_to main_app.root_url
           else
             redirect_to({ controller: 'gatepass/authentication', action: 'login' })
