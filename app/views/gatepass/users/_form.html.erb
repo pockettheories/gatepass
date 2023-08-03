@@ -18,12 +18,19 @@
 
   <div>
     <%= form.label :auth_type, style: "display: block" %>
-    <%= form.text_field :auth_type %>
+    <%#= form.text_field :auth_type %>
+    <%= form.select :auth_type, ["local", "activedirectory"].map {|e| [e, e]} %>
   </div>
 
   <div>
     <%= form.label :password_digest, style: "display: block" %>
     <%= form.text_field :password_digest %>
+  </div>
+
+  <div>
+    <%= form.label :rolename, style: "display: block" %>
+    <%#= form.text_field :rolename %>
+    <%= form.select :rolename, ["user", "admin"].map {|e| [e, e]} %>
   </div>
 
   <div>

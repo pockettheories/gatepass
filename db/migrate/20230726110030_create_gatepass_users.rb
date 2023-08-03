@@ -5,6 +5,7 @@ class CreateGatepassUsers < ActiveRecord::Migration[7.0]
       t.string :auth_type
       t.string :password_digest
       t.string :username_mapping
+      t.string :rolename
 
       t.timestamps
     end

@@ -1,5 +1,9 @@
 # Version History
 
+## Version 0.1.2
+
+* Added the "rolename" field
+* Enhanced the user management form with dropdowns to make it "usable" 😄
 
 ## Version 0.1.1
 

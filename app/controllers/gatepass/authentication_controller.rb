@@ -23,7 +23,7 @@ module Gatepass
         if user_obj === false
           redirect_to ({ controller: 'gatepass/authentication', action: 'login' })
         else
-          session[:user] = user_obj
+          session[:user] = user
           redirect_to main_app.root_url
         end
       elsif user.auth_type == 'activedirectory' # 'ldap'
@@ -59,6 +59,7 @@ module Gatepass
             redirect_to({ controller: 'gatepass/authentication', action: 'login' })
           elsif search_result_count == 1
             session[:user] = user # entry
+            session[:user_ldap_info] = entry
             redirect_to main_app.root_url
           else
             redirect_to({ controller: 'gatepass/authentication', action: 'login' })

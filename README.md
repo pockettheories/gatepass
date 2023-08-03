@@ -30,6 +30,10 @@ Or install it yourself as:
 ```bash
 $ gem install gatepass
 ```
+OR
+```bash
+$ bundle add gatepass
+```
 
 Mount the engine with the following line in `config/routes.rb` :
 ```
@@ -69,15 +73,31 @@ u1.auth_type = 'local'
 u1.save
 ```
 
+Create an initial ActiveDirectory user account with:
+```
+$ rails c
+u1 = Gatepass::User.new
+u1.username = 'reddy'
+u1.password = 'dummy'
+u1.auth_type = 'activedirectory'
+u1.rolename = 'admin'
+u1.username_mapping = 'CN=reddy,CN=Users,DC=pockettheories,DC=com'
+u1.save
+```
+
 Login with the above account, and access the user account management page at:
 http://localhost:3000/gatepass/users
 
+The logout URL is:
+http://localhost:3000/gatepass/authentication/logout
+
 ## Other Notes
 The User model has the fields: username:string auth_type:string password_digest:string username_mapping:string
-
 auth_type is `local` or `activedirectory`.
-
 Use a dummy password for activedirectory users.
+
+If you get the error "SSL_CTX_load_verify_file: system lib" when attempting to login as an ActiveDirectory user, it's 
+Ruby complaining about your OpenSSL version. (On MacOS Ventura 13.4.1, rbenv with Ruby 3.1.0 works; Ruby 3.2.2 doesn't)
 
 ## Contributing
 Create a pull request on GitHub.
